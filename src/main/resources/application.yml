@@ -1,0 +1,25 @@
+server:
+  port: 3602
+  servlet:
+    context-path: /api
+spring:
+  # 环境 prod
+  profiles:
+    active: prod
+  mvc:
+    view:
+      prefix: classpath:/templates/
+      suffix: .html
+    thymeleaf:
+      cache: false
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+mybatis-plus:
+  mapper-locations: classpath*:/mappers/*.xml
+  typeAliasesPackage: com.digital.deal.entity
+  global-config:
+    id-type: 0
+    db-column-underline: true

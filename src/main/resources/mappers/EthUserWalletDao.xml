@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aht.mapper.UserWalletDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.carbon.entity.UserWalletEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="coinId" column="coin_id"/>
+        <result property="address" column="address"/>
+        <result property="lowerAddress" column="lower_address"/>
+        <result property="password" column="password"/>
+        <result property="keystore" column="keystore"/>
+        <result property="valid" column="valid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, uid, coin_id,address, lower_address, password,keystore,valid,create_time,update_time
+    </sql>
+    <select id="getByAddress" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from eth_user_wallet
+        where address = #{address} LIMIT 1;
+    </select>
+
+    <select id="existLowerAddress" resultType="string">
+        select lower_address
+        from eth_user_wallet
+        where lower_address in
+        <foreach collection="addressSet" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

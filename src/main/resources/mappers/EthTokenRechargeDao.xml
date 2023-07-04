@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aht.mapper.UserRechargeDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.carbon.entity.UserRechargeEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="coinId" column="coin_id"/>
+        <result property="coinName" column="coin_name"/>
+        <result property="coinType" column="coin_type"/>
+        <result property="address" column="address"/>
+        <result property="confirm" column="confirm"/>
+        <result property="status" column="status"/>
+        <result property="txid" column="txid"/>
+        <result property="num" column="num"/>
+        <result property="fee" column="fee"/>
+        <result property="mum" column="mum"/>
+        <result property="blockNumber" column="block_number"/>
+        <result property="lastUpdateTime" column="last_update_time"/>
+        <result property="created" column="created"/>
+        <result property="type" column="type"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, coin_id,coin_name, coin_type, address,confirm,status,txid,num,fee,mum,block_number,last_update_time,created,type,remark
+    </sql>
+    <update id="updateConfirmStatus">
+        UPDATE eth_token_recharge
+        SET status = #{status},
+        confirm = #{confirm},
+        remark = #{remark},
+        last_update_time=NOW()
+        WHERE status = #{oldStatus} AND block_number &lt;= #{confirmBlockNo}
+    </update>
+
+    <update id="updateConfirmStatusAht">
+        UPDATE eth_token_recharge
+        SET status = #{status},
+        remark = #{remark},
+        last_update_time=NOW()
+        WHERE status = #{oldStatus} and id in
+        <foreach item="id" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateConfirmStatusById">
+        UPDATE eth_token_recharge
+        SET status = #{status},
+            remark = #{remark},
+            last_update_time=NOW()
+        WHERE status = #{oldStatus} and id = #{id}
+    </update>
+
+</mapper>

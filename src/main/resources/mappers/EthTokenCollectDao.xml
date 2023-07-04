@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aht.mapper.CoinCollectDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.carbon.entity.CoinCollectEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="receiver" column="receiver"/>
+        <result property="contract" column="contract"/>
+        <result property="token" column="token"/>
+        <result property="coinId" column="coin_id"/>
+        <result property="coinType" column="coin_type"/>
+        <result property="coinName" column="coin_name"/>
+        <result property="num" column="num"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, receiver,contract, token, coin_id,coin_type,coin_name,num,status,remark,create_time,update_time
+    </sql>
+    <select id="allByContract" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM eth_token_collect WHERE contract = #{contract} and status=0;
+    </select>
+
+    <update id="updateByContractAndId">
+        update eth_token_collect set status = 1, update_time = NOW()
+        WHERE id IN
+        <foreach collection="idSet" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND contract=#{contract} AND receiver=#{address}
+    </update>
+
+
+</mapper>

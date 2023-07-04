@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <title>测试页面 佐瞄瞄</title>
+</head>
+<script>
+    function sendTx() {
+        var address = $("#tron-address").val();
+        var amount = $("#tron-amount").val();
+        var remark = $("#tron-remark").val();
+
+        $.ajax({
+            url: "/zmm/test/send",
+            dataType: "json",
+            method: "post",
+            data: {
+                address: address,
+                amount: amount,
+                remark: remark
+            },
+            success: function (dt) {
+                $("#result-info").val(JSON.stringify(dt))
+            },
+            error: function () {
+                alert("出错拉")
+            }
+        })
+    }
+
+    function queryTokenAmount() {
+        var address = $("#query-token-address").val();
+        var contract = $("#query-token-contract").val();
+        $.ajax({
+            url: "/zmm/test/queryToken",
+            dataType: "json",
+            method: "post",
+            data: {
+                address: address,
+                contract: contract,
+            },
+            success: function (dt) {
+                $("#result-info").val(JSON.stringify(dt))
+            },
+            error: function () {
+                alert("出错拉")
+            }
+        })
+    }
+
+    function sendTokenTx() {
+        var address = $("#send-token-address").val();
+        var contract = $("#send-token-contract").val();
+        var amount = $("#send-token-amount").val();
+        var remark = $("#send-token-remark").val();
+        var get = $("#send-token-get").val();
+        var pk = $("#send-token-pk").val();
+        $.ajax({
+            url: "/zmm/test/sendToken",
+            dataType: "json",
+            method: "post",
+            data: {
+                address: address,
+                contract: contract,
+                amount: amount,
+                remark: remark,
+                get: get,
+                pk: pk
+            },
+            success: function (dt) {
+                $("#result-info").val(JSON.stringify(dt))
+            },
+            error: function () {
+                alert("出错拉")
+            }
+        })
+
+    }
+
+    function createAddress() {
+        $.ajax({
+            url: "/zmm/test/createAddress",
+            dataType: "json",
+            method: "post",
+            data: {},
+            success: function (dt) {
+                $("#result-info").val(JSON.stringify(dt))
+            },
+            error: function () {
+                alert("出错拉")
+            }
+        })
+    }
+
+    function balanceOfTron() {
+        var address = $("#query-tron-address").val();
+        $.ajax({
+            url: "/zmm/test/balanceOfTron",
+            dataType: "json",
+            method: "post",
+            data: {
+                address: address,
+            },
+            success: function (dt) {
+                $("#result-info").val(JSON.stringify(dt))
+            },
+            error: function () {
+                alert("出错拉")
+            }
+        })
+    }
+</script>
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    label {
+        width: 120px;
+        text-align: right;
+        color: coral;
+    }
+
+    input {
+        width: 360px;
+    }
+
+    td {
+
+    }
+</style>
+<body style="background-color: antiquewhite">
+<div style="width: 1200px;margin: 0 auto">
+
+    <div style="width: 980px;margin: 0 auto">
+        <label>转账的时候 如果没有Gas是需要消耗一定量的trx来转换成gas 否则转账失败</label>
+        <textarea id="result-info" style="width: 100%;height: 100px;margin: 0 auto">
+
+        </textarea>
+    </div>
+    <div style="width: 860px;margin: 0  auto">
+        <table>
+            <tr>
+                <td width="460px">
+                    <ul>
+                        <li>
+                            <label>配置账户Trc20转账</label>
+                        </li>
+                        <li>
+                            <label>输入地址</label>
+                            <input type="text" id="tron-address" placeholder="输入tron收款地址">
+                        </li>
+                        <li>
+                            <label>输入数量</label>
+                            <input type="text" id="tron-amount" placeholder="输入转账数量">
+                        </li>
+                        <li>
+                            <label>输入备注</label>
+                            <input type="text" id="tron-remark" placeholder="输入转账备注">
+                        </li>
+                        <li>
+                            <input type="button" onclick="sendTx()" value="发起转账" style="width: 80px">
+                        </li>
+                    </ul>
+                </td>
+                <td width="500px">
+                    <label>
+                        这里需要提一下，如果你收款的地址之前没有收过币<br/>
+                        那么你是要用一定量的trx来给那个收款地址进行激活<br/>
+                        如果你少trx 那么就会发送失败 忘了是多少个了 反正很少
+                    </label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <ul>
+                        <li><label>查询代币数量</label></li>
+                        <li><label>查询地址</label><input type="text" id="query-token-address" placeholder="输入查询地址"></li>
+                        <li><label>合约地址</label><input type="text" id="query-token-contract" placeholder="输入合约"
+                                                      value="4152a36662ffd1089e830fbcbd9128389539a969c6"></li>
+                        <li><input style="width: 180px" type="button" value="查询代币" onclick="queryTokenAmount()"/></li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <ul>
+                        <li><label>Trc20转账</label></li>
+                        <li><label>付款地址</label><input type="text" id="send-token-address" placeholder="输入查询地址"></li>
+                        <li><label>付款私钥</label><input type="text" id="send-token-pk" placeholder="输入付款私钥"></li>
+                        <li><label>合约地址</label><input type="text" id="send-token-contract" placeholder="输入合约"
+                                                      value="4152a36662ffd1089e830fbcbd9128389539a969c6"></li>
+                        <li><label>付款额度</label><input type="text" id="send-token-amount" placeholder="输入转账额度"></li>
+                        <li><label>付款备注</label><input type="text" id="send-token-remark" placeholder="输入转账备注"></li>
+                        <li><label>收款地址</label><input type="text" id="send-token-get" placeholder="输入收款地址"
+                                                      value="TU2PSurWtRfMGWzvbzj7P12ZPo8tQpETww"></li>
+                        <li><input style="width: 180px" type="button" value="代币转账" onclick="sendTokenTx()"/></li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <ul>
+                        <li><label>创建Tron地址</label></li>
+                        <li><input style="width: 180px" type="button" onclick="createAddress()" value="创建地址"></li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <ul>
+                        <li><label>查询TRX数量</label></li>
+                        <li>
+                            <label>输入地址</label>
+                            <input type="text" id="query-tron-address" placeholder="输入Tron地址">
+                        </li>
+                        <li><input style="width: 180px" type="button" onclick="balanceOfTron()" value="查询波场币额度"></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+</div>
+</body>
+</html>
